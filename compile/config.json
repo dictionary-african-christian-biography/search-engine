@@ -1,0 +1,4 @@
+{
+  "outpath": "./search-data.json",
+  "lightweight-outpath": "./search-data-lightweight.json"
+}

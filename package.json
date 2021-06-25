@@ -1,0 +1,15 @@
+{
+  "name": "search-engine",
+  "version": "1.0.0",
+  "description": "Search engine for the DACB website.",
+  "scripts": {
+    "compile": "node compile"
+  },
+  "repository": "https://github.com/dictionary-african-christian-biography/search-engine",
+  "author": "xtrp <36894883+xtrp@users.noreply.github.com>",
+  "license": "Unlicensed",
+  "private": true,
+  "dependencies": {
+    "gray-matter": "^4.0.3"
+  }
+}
