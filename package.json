@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Search engine for the DACB website.",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "demo": "echo 'Open http://localhost:1729/demo/ to view a list of demos.' && live-server --port=1729"
   },
   "repository": "https://github.com/dictionary-african-christian-biography/search-engine",
   "author": "xtrp <36894883+xtrp@users.noreply.github.com>",
@@ -21,6 +22,7 @@
     "webpack": "^5.40.0"
   },
   "devDependencies": {
+    "live-server": "^1.2.1",
     "webpack-cli": "^4.7.2"
   }
 }

@@ -7,6 +7,7 @@ const striptags = require('striptags');
 const cheerio = require('cheerio');
 const KramdownAttrs = require('markdown-it-kramdown-attrs');
 const config = require('./config.json');
+const { ifError } = require('assert');
 
 const markdownIt = new (require('markdown-it'))({
   html: true,
@@ -20,7 +21,10 @@ const logger = {
 
 const saveSearchData = (data) => {
   fs.writeFileSync(config['outpath'], `module.exports = ${JSON.stringify(data)};`);
-  const lightweightData = data.reduce((a, b) => ({ ...a, [b.data.title]: b.data.permalink }), {});
+  const lightweightData = data.reduce((a, b) => {
+    const lang = b.data.lang || 'en';
+    return { ...a, [lang]: { ...a[lang], [b.data.title]: b.data.permalink } };
+  }, {});
   fs.writeFileSync(config['lightweight-outpath'], `module.exports = ${JSON.stringify(lightweightData)};`);
   logger.log(`Saved search data to ${config['outpath']} and lightweight data to ${config['lightweight-outpath']}.`);
 };

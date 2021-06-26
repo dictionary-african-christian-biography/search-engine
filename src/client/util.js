@@ -45,4 +45,31 @@ const constrainSentencesToWordTotal = (sentences, wordTotal) => {
   return sentences;
 };
 
-module.exports = { highlightKeywords, getSentences, constrainSentencesToWordTotal, getWords };
+const sortResultsByLanguage = (results, language) => {
+  let languagesList = Array.from(new Set(results.map((e) => e.language)));
+  if (languagesList.indexOf(language) > -1) languagesList = [language, ...languagesList.filter((e) => e !== language)];
+  results = results.map((e, i) => ({ ...e, __weight: i }));
+  const calculateCompleteWeight = (item) => item.__weight + results.length * languagesList.indexOf(item.language);
+  results.sort((a, b) => calculateCompleteWeight(a) - calculateCompleteWeight(b));
+  results = results.map((e) => {
+    delete e.__weight;
+    return e;
+  });
+  return results;
+};
+
+const addEllipses = (text) => {
+  // makes sure that only three periods are present at the end of the text -- no less and no more
+  let lastIndex = text.length;
+  for (let i = text.length - 1; i--; i <= 0) {
+    if (text[i] !== '.') {
+      lastIndex = i + 1;
+      break;
+    }
+  }
+  text = text.slice(0, lastIndex);
+  text += '...';
+  return text;
+};
+
+module.exports = { highlightKeywords, getSentences, constrainSentencesToWordTotal, getWords, sortResultsByLanguage, addEllipses };
