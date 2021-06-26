@@ -23,11 +23,11 @@ const getSearchResults = async (query) =>
         results.reduce(
           (a, b) => [
             ...a,
-            b.result.map((e) => {
+            ...b.result.map((e) => {
               return {
                 title: data[e].data.title,
                 url: data[e].data.permalink,
-                content: data[e].content.slice(0, 150).trim() + '...',
+                content: data[e].content.slice(0, 250).trim() + '...',
                 imageURL: data[e].imageURL,
               };
             }),

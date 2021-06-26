@@ -58,6 +58,9 @@ const getCleanFileContentAndBioImage = (content, isMarkdown = false) => {
   // remove tags from HTML
   content = striptags(content);
 
+  // special case for trying to remove bio image leftover Kramdown Markdown
+  content = content.replace(/{:class="bio"}/g, '');
+
   // convert all whitespace (ex: tabs, spaces, newlines) to spaces
   content = content.replace(/\s/g, ' ');
 
