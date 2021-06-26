@@ -2,12 +2,15 @@ require('./util');
 const fs = require('fs');
 const path = require('path');
 const grayMatter = require('gray-matter');
-const config = require('./config.json');
+const { titleCase } = require('title-case');
 const striptags = require('striptags');
 const cheerio = require('cheerio');
 const KramdownAttrs = require('markdown-it-kramdown-attrs');
+const config = require('./config.json');
 
-const markdownIt = new (require('markdown-it'))();
+const markdownIt = new (require('markdown-it'))({
+  html: true,
+});
 markdownIt.use(KramdownAttrs);
 
 const logger = {
@@ -58,13 +61,30 @@ const getCleanFileContentAndBioImage = (content, isMarkdown = false) => {
   // remove tags from HTML
   content = striptags(content);
 
+  if (isMarkdown) {
+    // render another time so that markdown within embedded HTML is rendered
+    // ex: markdown that looks like <em>**text here**</em> becomes **text here** when rendering only once.
+    // NOTE: this is currently commented because it seems to cause an issue with the Kramdown Attrs package. This isn't that big of a problem so it's fine to leave it here.
+    // content = markdownIt.render(content);
+  }
+
   // special case for trying to remove bio image leftover Kramdown Markdown
   content = content.replace(/{:class="bio"}/g, '');
 
+  // remove liquid tags like {{stuff here}} and {%stuff here%}
+  content = content.replace(/{%.*%}|{{.*}}/g, '');
+
   // convert all whitespace (ex: tabs, spaces, newlines) to spaces
-  content = content.replace(/\s/g, ' ');
+  content = content.replace(/\s+/g, ' ');
 
   return { cleanedContent: content, imageURL };
+};
+
+const getCleanFileData = (data) => {
+  if (data.title) {
+    data.title = titleCase(data.title);
+  }
+  return data;
 };
 
 const getDataFromPagePaths = async (pagePaths) =>
@@ -76,8 +96,9 @@ const getDataFromPagePaths = async (pagePaths) =>
         pagesCheckedCount++;
         if (!err) {
           const fileName = path.basename(pagePath);
-          const { content, data } = grayMatter(rawContent.toString());
+          let { content, data } = grayMatter(rawContent.toString());
           const { cleanedContent, imageURL } = getCleanFileContentAndBioImage(content, !fileName.endsWith('html'));
+          data = getCleanFileData(data);
           const page = { content: cleanedContent, data, fileName, imageURL };
           if (isValidPage(page)) pageData.push(page);
         }
