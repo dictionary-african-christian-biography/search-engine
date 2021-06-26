@@ -1,0 +1,5 @@
+{
+  "outpath": "./src/data/search-data.js",
+  "lightweight-outpath": "./src/data/search-data-lightweight.js",
+  "site-path": "../"
+}
