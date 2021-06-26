@@ -1,4 +1,4 @@
 {
-  "outpath": "./search-data.json",
-  "lightweight-outpath": "./search-data-lightweight.json"
+  "outpath": "./client/search-data.js",
+  "lightweight-outpath": "./client/search-data-lightweight.js"
 }

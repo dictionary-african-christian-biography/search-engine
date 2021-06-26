@@ -3,6 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const grayMatter = require('gray-matter');
 const config = require('./config.json');
+const striptags = require('striptags');
+const cheerio = require('cheerio');
+const KramdownAttrs = require('markdown-it-kramdown-attrs');
+
+const markdownIt = new (require('markdown-it'))();
+markdownIt.use(KramdownAttrs);
 
 const logger = {
   log: (text) => console.log(text),
@@ -10,9 +16,9 @@ const logger = {
 };
 
 const saveSearchData = (data) => {
-  fs.writeFileSync(config['outpath'], JSON.stringify(data));
+  fs.writeFileSync(config['outpath'], `module.exports = ${JSON.stringify(data)};`);
   const lightweightData = data.reduce((a, b) => ({ ...a, [b.data.title]: b.data.permalink }), {});
-  fs.writeFileSync(config['lightweight-outpath'], JSON.stringify(lightweightData));
+  fs.writeFileSync(config['lightweight-outpath'], `module.exports = ${JSON.stringify(lightweightData)};`);
   logger.log(`Saved search data to ${config['outpath']} and lightweight data to ${config['lightweight-outpath']}.`);
 };
 
@@ -39,6 +45,25 @@ const isValidPage = (page) => {
   return true;
 };
 
+const getCleanFileContentAndBioImage = (content, isMarkdown = false) => {
+  if (isMarkdown) {
+    // convert markdown to HTML
+    content = markdownIt.render(content);
+  }
+
+  // attempt to find bio image
+  const $ = cheerio.load(content);
+  const imageURL = $('img.bio').attr('src');
+
+  // remove tags from HTML
+  content = striptags(content);
+
+  // convert all whitespace (ex: tabs, spaces, newlines) to spaces
+  content = content.replace(/\s/g, ' ');
+
+  return { cleanedContent: content, imageURL };
+};
+
 const getDataFromPagePaths = async (pagePaths) =>
   new Promise((resolve, reject) => {
     const pageData = [];
@@ -47,8 +72,10 @@ const getDataFromPagePaths = async (pagePaths) =>
       fs.readFile(pagePath, (err, rawContent) => {
         pagesCheckedCount++;
         if (!err) {
+          const fileName = path.basename(pagePath);
           const { content, data } = grayMatter(rawContent.toString());
-          const page = { content, data };
+          const { cleanedContent, imageURL } = getCleanFileContentAndBioImage(content, !fileName.endsWith('html'));
+          const page = { content: cleanedContent, data, fileName, imageURL };
           if (isValidPage(page)) pageData.push(page);
         }
         if (pagesCheckedCount === pagePaths.length) resolve(pageData);
