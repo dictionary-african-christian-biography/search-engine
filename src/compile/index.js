@@ -112,12 +112,10 @@ const getDataFromPagePaths = async (pagePaths) =>
     });
   });
 
-const main = async () => {
+const main = async (sitePath = config['site-path']) => {
   logger.log('Fetching list of pages...');
-  const pagePaths = findPagesFilePaths(config['site-path'], [
-    'node_modules',
+  const pagePaths = findPagesFilePaths(sitePath, [
     '_site',
-    'search-engine',
     '_includes',
     '_layouts',
     '_plugins',

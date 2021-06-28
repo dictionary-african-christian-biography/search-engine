@@ -16,7 +16,7 @@ const getSearchResults = async (query, queryLang = 'en') =>
   new Promise((resolve) => {
     // limit results to 100
     index.searchAsync(query, 100, (rawResults) => {
-      let results = rawResults.map((e) => ({ url: e, title: data[e], language: languagesMap[e] }));
+      let results = rawResults.map((e) => ({ title: e, url: data[languagesMap[e]][e], language: languagesMap[e] }));
       results = sortResultsByLanguage(results, queryLang);
       resolve(results);
     });
