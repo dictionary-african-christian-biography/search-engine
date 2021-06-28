@@ -1,8 +1,34 @@
-const { sortResultsByLanguage } = require('./util');
-const { Index } = require('flexsearch');
+const { sortResultsByLanguage, getWords } = require('./util');
 const data = require('../data/search-data-lightweight');
 
-const index = new Index('performance');
+const index = {
+  data: {},
+  addAsync: async (key, value) => {
+    data[key] = value;
+  },
+  searchAsync: async (query, limit, callback) => {
+    let queryWords = getWords(query.toLowerCase());
+    let results = {
+      fullWordMatches: [],
+      startMatches: [],
+      startWordMatches: [],
+    };
+    Object.keys(data).forEach((toSearch) => {
+      const toSearchCleaned = toSearch.toLowerCase().trim();
+      let toSearchWords = getWords(toSearchCleaned);
+      for (word of toSearchWords) {
+        for (let queryWord of queryWords) {
+          if (queryWord === word) return results.fullWordMatches.push(toSearch);
+          if (toSearchCleaned.startsWith(queryWord)) return results.startMatches.push(toSearch);
+          if (word.startsWith(queryWord)) return results.startWordMatches.push(toSearch);
+        }
+      }
+    });
+    results = [...results.fullWordMatches, ...results.startMatches, ...results.startWordMatches];
+    results = results.slice(0, limit);
+    callback(results);
+  },
+};
 
 const languagesMap = {};
 Object.keys(data).forEach((lang) => {
