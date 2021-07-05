@@ -7,14 +7,21 @@ const index = {
     data[key] = value;
   },
   searchAsync: async (query, limit, callback) => {
+    const queryCleaned = query.toLowerCase().trim();
     let queryWords = getWords(query.toLowerCase());
     let results = {
+      fullStartMatches: [],
       fullWordMatches: [],
       startMatches: [],
       startWordMatches: [],
     };
     Object.keys(data).forEach((toSearch) => {
       const toSearchCleaned = toSearch.toLowerCase().trim();
+
+      if (toSearchCleaned.startsWith(queryCleaned)) {
+        return results.fullStartMatches.push(toSearch);
+      }
+
       let toSearchWords = getWords(toSearchCleaned);
       for (word of toSearchWords) {
         for (let queryWord of queryWords) {
@@ -24,7 +31,7 @@ const index = {
         }
       }
     });
-    results = [...results.fullWordMatches, ...results.startMatches, ...results.startWordMatches];
+    results = [...results.fullStartMatches, ...results.fullWordMatches, ...results.startMatches, ...results.startWordMatches];
     results = results.slice(0, limit);
     callback(results);
   },
@@ -43,7 +50,7 @@ const getSearchResults = async (query, queryLang = 'en') =>
     // limit results to 100
     index.searchAsync(query, 100, (rawResults) => {
       let results = rawResults.map((e) => ({ title: e, url: data[languagesMap[e]][e], language: languagesMap[e] }));
-      results = sortResultsByLanguage(results, queryLang);
+      if (queryLang !== -1) results = sortResultsByLanguage(results, queryLang);
       resolve(results);
     });
   });
