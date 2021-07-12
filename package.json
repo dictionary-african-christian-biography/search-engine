@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Search engine for the DACB website.",
   "scripts": {
+    "build": "yarn build1 && yarn build2",
     "build1": "node index-build",
     "build2": "webpack",
     "demo": "echo 'Open http://localhost:1729/demo/ to view a list of demos.' && live-server --port=1729"
