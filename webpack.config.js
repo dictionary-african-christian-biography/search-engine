@@ -41,22 +41,5 @@ module.exports = [
       path: outputPath,
       filename: 'search-lightweight.bundle.js',
     },
-  },
-  // backwards compatible version
-  {
-    ...defaultConfig,
-    entry: './src/client/search.js',
-    output: {
-      path: backwardsCompatibleOutputPath,
-      filename: 'search.bundle.js',
-    },
-  },
-  {
-    ...defaultConfig,
-    entry: './src/client/search-lightweight.js',
-    output: {
-      path: backwardsCompatibleOutputPath,
-      filename: 'search-lightweight.bundle.js',
-    },
-  },
+  }
 ];
