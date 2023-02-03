@@ -152,6 +152,7 @@ const createSiteContentFromPageData = (pageData) => {
     'catechist',
     'clergy',
     'diaspora',
+    'ecologist',
     'ecumenist',
     'evangelist',
     'nationalist',
