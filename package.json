@@ -1,0 +1,29 @@
+{
+  "name": "search-engine",
+  "version": "1.0.0",
+  "description": "Search engine for the DACB website.",
+  "scripts": {
+    "build": "webpack",
+    "demo": "echo 'Open http://localhost:1729/demo/ to view a list of demos.' && live-server --port=1729"
+  },
+  "repository": "https://github.com/dictionary-african-christian-biography/search-engine",
+  "author": "xtrp <36894883+xtrp@users.noreply.github.com>",
+  "license": "Unlicensed",
+  "private": true,
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "escape-string-regexp": "^5.0.0",
+    "flexsearch": "^0.7.11",
+    "gray-matter": "^4.0.3",
+    "markdown-it": "^12.0.6",
+    "markdown-it-kramdown-attrs": "^0.1.0",
+    "strftime": "^0.10.0",
+    "striptags": "^3.2.0",
+    "title-case": "^3.0.3",
+    "webpack": "^5.40.0"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.1",
+    "webpack-cli": "^4.7.2"
+  }
+}
