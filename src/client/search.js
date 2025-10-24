@@ -1,8 +1,8 @@
-const { Document } = require('flexsearch');
+const FlexSearch = require('flexsearch');
 const data = require('../data/search-data');
 const { highlightKeywords, getSentences, constrainSentencesToWordTotal, getWords, sortResultsByLanguage, addEllipses } = require('./util');
 
-const index = new Document({
+const index = new FlexSearch.Document({
   document: {
     id: 'id',
     index: ['title', 'content'],
