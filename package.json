@@ -21,11 +21,11 @@
     "markdown-it-kramdown-attrs": "0.1.0",
     "strftime": "0.10.0",
     "striptags": "3.2.0",
-    "title-case": "3.0.3",
-    "webpack": "5.40.0"
+    "title-case": "3.0.3"
   },
   "devDependencies": {
     "live-server": "1.2.1",
+    "webpack": "^5.102.1",
     "webpack-cli": "4.7.2"
   }
 }
